@@ -1,26 +1,28 @@
-# 🏰 Disney Store Management System
-
-![Disney Store Banner](screenshots/banner.png) <!-- Note: Add a placeholder or standard banner to a screenshots folder -->
-
-A full-stack, scalable Point of Sale (POS) and inventory management system designed specifically for a modern Disney Store. Built with Next.js 14, React, Tailwind CSS, and Firebase, this elegant dashboard provides real-time transactional integrity, localized analytics, and frictionless billing capabilities for fast-paced retail environments.
+<div align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Disney_wordmark.svg/1000px-Disney_wordmark.svg.png" width="300" alt="Disney Logo" />
+  <h1>🏰 Disney Store Management System</h1>
+  <p>A full-stack, enterprise-grade Point of Sale (POS) and retail management platform built specially for Disney Store operations.</p>
+</div>
 
 ---
 
-## 🔗 Links
-- **Live Demo**: [Insert Vercel Deployment Link Here]
-- **Repository**: [Insert GitHub Repository Link Here]
+## 📖 Project Overview
+
+The **Disney Store Management System** is a scalable, modern dashboard designed to provide fast-paced retail environments with real-time transactional integrity, atomic inventory synchronization, and frictionless billing capabilities. Built on a cutting-edge React/Next.js stack utilizing Firestore for lightning-fast concurrent updates, this system equips administrators and store staff with intuitive tools to manage products, analyze revenue, and serve magical shopping experiences seamlessly.
 
 ---
 
 ## ✨ Features
 
-- **Store Dashboard**: Robust analytics engine utilizing customized Lucide SVG iconography, mapping your Total Products, Orders, and aggregated Revenue precisely.
-- **Automated Inventory Alerts**: Visually highlights statically compiled threshold alerts rendering distinct red warning cards for items with low stock (`< 5`) in real-time.
-- **Fluid Point of Sale (Billing)**: A dedicated two-pane grid layout rendering available products alongside an interactive sticky Cart, physically preventing negative stock limits with atomic backend checks natively.
-- **Atomic Transactions (Firebase)**: Complete protection against race-conditions. The order creation explicitly executes Firebase `runTransaction` payloads, enforcing strict stability rolling back transactions entirely if items sell out milliseconds before checkout completes!
-- **Dynamic Order History**: Detailed `<table/>` UI interfaces fetching all created Orders securely mapping dates, nested cart arrays, and pricing scales beautifully using striped gradient Tailwind styles.
-- **Product Management Backend**: Custom API routes executing GET, POST and DELETE behaviors connected directly to Firestore so administrators can update warehouse supplies organically.
-- **Secure Authentication**: Encrypted Google Firebase Auth middleware enveloping private dashboard route layouts cleanly to prevent unauthorized external access.
+- ✅ **Auth System**: Secure Google Firebase email/password authentication preventing unauthorized external access.
+- ✅ **Role-based Access**: Strict routing protocols ensuring `Admin` users have global control, while `Staff` accounts are limited to retail billing interactions.
+- ✅ **Dashboard**: A comprehensive, responsive hub giving immediate macro-insights into store performance and low-stock threshold alerts.
+- ✅ **Analytics Charts**: Beautiful, interactive Recharts integrations mapping revenue timelines and top-selling merchandise intuitively.
+- ✅ **Product Management**: Full CRUD backend API interfaces connected dynamically to Firestore for organically updating warehouse supplies. 
+- ✅ **Stock Management**: Automated local state synchronization physically preventing negative stock limits and cart overflows.
+- ✅ **Billing System**: A fluid Point of Sale (POS) two-pane grid layout designed for rapid barcode-style item addition and secure transaction checkout.
+- ✅ **Orders System**: Detailed, highly-structured historic mapping of all created orders, nested cart arrays, and pricing tiers.
+- ✅ **📄 PDF Invoices**: One-click professional auto-generated PDF receipts using jsPDF directly from the transaction ledger.
 
 ---
 
@@ -28,25 +30,34 @@ A full-stack, scalable Point of Sale (POS) and inventory management system desig
 
 - **Framework**: [Next.js 14 (App Router)](https://nextjs.org/)
 - **Programming Language**: [TypeScript](https://www.typescriptlang.org/)
-- **UI & Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Authentication**: Firebase Auth
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Icons & UI**: [Lucide React](https://lucide.dev/)
+- **Charts**: [Recharts](https://recharts.org/)
+- **PDF Generation**: [jsPDF](https://github.com/parallax/jsPDF) & [jsPDF-AutoTable](https://github.com/simonbengtsson/jsPDF-AutoTable)
 - **Database**: Firebase Firestore (NoSQL)
+- **Authentication**: Firebase Auth
 - **Deployment**: Vercel
+
+---
+
+## 🚀 Live Demo
+
+- **Live URL**: [Insert your Vercel Deployment Link Here]
+- **Repository**: [Insert your GitHub Repository Link Here]
 
 ---
 
 ## 📸 Screenshots
 
-| Dashboard Overview | Point of Sale (Billing) |
+| 📊 Analytics Dashboard | 💳 Point of Sale (Billing) |
 |:---:|:---:|
-| ![Dashboard UI](screenshots/dashboard.png) <br> *A responsive analytics dashboard tracking revenue and low stock levels* | ![Billing Page](screenshots/billing.png) <br> *A fully automated Cart tracking interactive stock parameters natively* |
+| ![Dashboard UI](screenshots/dashboard.png) <br> *A responsive analytics engine utilizing interactive Recharts.* | ![Billing Page](screenshots/billing.png) <br> *Automated POS cart with native stock tracking.* |
 
-| Product Management | Order Tracking History |
+| 📦 Product Database | 🧾 Order Tracking |
 |:---:|:---:|
-| ![Product Table](screenshots/products.png) <br> *Administrators editing the active database supplies* | ![Orders Map](screenshots/orders.png) <br> *Highly detailed tabular mapping of historical orders* |
+| ![Product Table](screenshots/products.png) <br> *Administrators managing active warehouse constraints.* | ![Orders Map](screenshots/orders.png) <br> *Extensive historical data and PDF generation.* |
 
-*(Note: Create a `screenshots` folder in your root repository to map your exact layout images!)*
+*(Note: Create a `screenshots` folder in your root directory to map your exact layout images!)*
 
 ---
 
@@ -65,8 +76,8 @@ cd disney-store
 npm install
 ```
 
-### 3. Setup Firebase Coordinates
-Create an environment `.env.local` file natively in your root operating directory and configure your explicit Firebase application parameters:
+### 3. Setup Firebase Configuration
+Create an environment `.env.local` file natively in your root directory and configure your explicit Firebase application parameters:
 ```env
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
@@ -82,7 +93,7 @@ npm run dev
 ```
 
 ### 5. Open your Browser
-Navigate intuitively to [http://localhost:3000](http://localhost:3000) inside your preferred web browser to view your local compilation. 
+Navigate intuitively to [http://localhost:3000](http://localhost:3000) inside your web browser to view your compiled application. 
 
 ---
 
