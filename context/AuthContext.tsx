@@ -2,7 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import { useRouter, usePathname } from 'next/navigation';
 import DashboardLayout from '@/components/DashboardLayout';
 
@@ -10,11 +11,13 @@ const publicRoutes = ['/', '/login', '/signup', '/register', '/forgot-password']
 
 interface AuthContextType {
   user: User | null;
+  role: string | null;
   loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  role: null,
   loading: true,
 });
 
@@ -22,14 +25,30 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
 
   // Listen to Firebase Auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+          if (userDoc.exists()) {
+            setRole(userDoc.data().role || 'admin');
+          } else {
+            setRole('admin');
+          }
+        } catch (error) {
+          console.error('Error fetching role:', error);
+          setRole('admin');
+        }
+      } else {
+        setRole(null);
+      }
       setLoading(false);
     });
 
@@ -40,20 +59,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (!loading) {
       const isPublicRoute = publicRoutes.includes(pathname);
+      const isAuthRoute = ['/login', '/signup', '/register'].includes(pathname);
 
       // If there's no user and user tries to access a protected route (not a public route)
       if (!user && !isPublicRoute) {
         router.push('/login');
+        return;
       } 
-      // If user is logged in but tries to access login, signup, or register page
-      else if (user && (pathname === '/login' || pathname === '/signup' || pathname === '/register')) {
-        router.push('/dashboard');
+      
+      // If user is logged in
+      if (user) {
+        // Staff role restrictions
+        if (role === 'staff') {
+          // Admin has full access, but staff has ONLY billing page
+          // Explicitly restricting /products and /dashboard, plus anything else
+          if (pathname !== '/billing' || isAuthRoute) {
+            router.push('/billing');
+            return;
+          }
+        } 
+        // Admin or others going to auth pages
+        else if (isAuthRoute) {
+          router.push('/dashboard');
+        }
       }
     }
-  }, [user, loading, pathname, router]);
+  }, [user, role, loading, pathname, router]);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, role, loading }}>
       {loading ? (
         <div className="flex h-screen w-full items-center justify-center bg-gray-50">
           <div className="flex flex-col items-center space-y-4">

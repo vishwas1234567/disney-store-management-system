@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import { Product } from "@/types/product";
 import { Package, ShoppingCart, DollarSign, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 interface DashboardData {
   totalProducts: number;
   totalOrders: number;
   totalRevenue: number;
   lowStockProducts: Product[];
+  revenuePerDay: { date: string; revenue: number }[];
+  topSellingProducts: { name: string; quantity: number }[];
 }
 
 export default function DashboardPage() {
@@ -95,6 +98,96 @@ export default function DashboardPage() {
             Total Revenue
           </p>
           <p className="text-5xl font-extrabold text-green-500 relative z-10">${Number(data.totalRevenue).toFixed(2)}</p>
+        </div>
+      </div>
+
+      {/* Analytics Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        {/* Revenue Over Time Chart */}
+        <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 transition-all duration-300 hover:shadow-xl group">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-900">Revenue Tracking</h2>
+            <span className="text-xs font-semibold bg-emerald-100 text-emerald-600 px-3 py-1 rounded-full">Over Time</span>
+          </div>
+          <div className="h-80 w-full relative z-10">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data.revenuePerDay} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                <XAxis 
+                  dataKey="date" 
+                  stroke="#9ca3af" 
+                  fontSize={12} 
+                  tickLine={false} 
+                  axisLine={false}
+                  padding={{ left: 10, right: 10 }}
+                  tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                />
+                <YAxis 
+                  stroke="#9ca3af" 
+                  fontSize={12} 
+                  tickLine={false} 
+                  axisLine={false} 
+                  tickFormatter={(value) => `$${value}`} 
+                />
+                <Tooltip 
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                  formatter={(value: unknown) => [`$${Number(value).toFixed(2)}`, 'Revenue']}
+                  labelStyle={{ color: '#374151', fontWeight: 'bold', marginBottom: '4px' }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="revenue" 
+                  stroke="#10b981" 
+                  strokeWidth={4} 
+                  dot={{ r: 4, fill: '#10b981', strokeWidth: 2, stroke: '#fff' }} 
+                  activeDot={{ r: 8, strokeWidth: 0, fill: '#059669' }} 
+                  animationDuration={1500}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Top Selling Products Chart */}
+        <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 transition-all duration-300 hover:shadow-xl group">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-900">Top Performing Items</h2>
+            <span className="text-xs font-semibold bg-blue-100 text-blue-600 px-3 py-1 rounded-full">All Time</span>
+          </div>
+          <div className="h-80 w-full relative z-10">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data.topSellingProducts} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                <XAxis 
+                  dataKey="name" 
+                  stroke="#9ca3af" 
+                  fontSize={12} 
+                  tickLine={false} 
+                  axisLine={false} 
+                  tickFormatter={(value) => value.length > 12 ? `${value.substring(0, 12)}...` : value }
+                />
+                <YAxis 
+                  stroke="#9ca3af" 
+                  fontSize={12} 
+                  tickLine={false} 
+                  axisLine={false} 
+                />
+                <Tooltip 
+                  cursor={{ fill: '#f8fafc' }}
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                  formatter={(value: unknown) => [`${value} units`, 'Sold']}
+                  labelStyle={{ color: '#374151', fontWeight: 'bold', marginBottom: '4px' }}
+                />
+                <Bar 
+                  dataKey="quantity" 
+                  fill="#3b82f6" 
+                  radius={[6, 6, 0, 0]} 
+                  barSize={48}
+                  animationDuration={1500}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 

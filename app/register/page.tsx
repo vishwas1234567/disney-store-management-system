@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -11,6 +12,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("admin");
   const [showPassword, setShowPassword] = useState(false);
   
   const [error, setError] = useState("");
@@ -47,8 +49,17 @@ export default function RegisterPage() {
         });
       }
 
+      // Automatically store role in Firestore
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        email: userCredential.user.email,
+        name: name.trim(),
+        role: role,
+        createdAt: new Date().toISOString()
+      });
+
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (error: unknown) {
+      const err = error as { code?: string; message?: string };
       console.error("Registration error:", err);
       // Map Firebase auth errors to user-friendly messages
       switch (err.code) {
@@ -158,6 +169,46 @@ export default function RegisterPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Select Account Role <span className="text-red-500">*</span>
+              </label>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => setRole("admin")}
+                  className={`py-2 px-4 border rounded-lg flex items-center justify-center transition-colors ${
+                    role === "admin"
+                      ? "border-blue-600 bg-blue-50 text-blue-700 font-semibold shadow-sm"
+                      : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Admin
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRole("staff")}
+                  className={`py-2 px-4 border rounded-lg flex items-center justify-center transition-colors ${
+                    role === "staff"
+                      ? "border-blue-600 bg-blue-50 text-blue-700 font-semibold shadow-sm"
+                      : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Staff
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
 
