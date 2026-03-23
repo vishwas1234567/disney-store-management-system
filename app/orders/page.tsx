@@ -50,65 +50,56 @@ export default function OrdersPage() {
           <p className="text-sm mt-1">Generate a bill first to see it here!</p>
         </div>
       ) : (
-        <div className="space-y-6">
-          {orders.map((order) => (
-            <div key={order.id} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden transition hover:shadow-md">
-              
-              {/* Card Header */}
-              <div className="bg-gray-50 px-6 py-5 border-b border-gray-200 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-                <div className="flex flex-col">
-                  <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">
-                    Order ID
-                  </span>
-                  <span className="font-mono text-gray-900 font-semibold">
-                    {order.id}
-                  </span>
-                </div>
-                
-                <div className="flex flex-col">
-                  <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">
-                    Date Placed
-                  </span>
-                  <span className="text-gray-900 font-medium">
-                    {formatDate(order.createdAt)}
-                  </span>
-                </div>
-                
-                <div className="flex flex-col sm:text-right">
-                  <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">
-                    Total Amount
-                  </span>
-                  <span className="font-bold text-xl text-green-600">
-                    ${Number(order.totalAmount).toFixed(2)}
-                  </span>
-                </div>
-              </div>
-
-              {/* Card Body (Items) */}
-              <div className="px-6 py-5">
-                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 border-b pb-2">
-                  Purchased Items
-                </h3>
-                <ul className="space-y-3">
-                  {order.items.map((item, index) => (
-                    <li key={`${order.id}-${item.productId}-${index}`} className="flex justify-between items-center group">
-                      <div className="flex items-center">
-                        <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-md mr-3">
-                          {item.quantity}x
-                        </span>
-                        <span className="font-medium text-gray-800 group-hover:text-blue-600 transition-colors">
-                          {item.name}
-                        </span>
-                      </div>
-                      <span className="text-gray-500 text-sm font-medium">
-                        ${Number(item.price).toFixed(2)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-left border-collapse border border-gray-200 shadow-sm rounded-lg">
+              <thead>
+                <tr className="bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 text-sm border-b border-gray-200 uppercase tracking-wider">
+                  <th className="px-6 py-4 font-bold border-r border-gray-200 min-w-[200px]">Order ID</th>
+                  <th className="px-6 py-4 font-bold border-r border-gray-200 min-w-[200px]">Date Placed</th>
+                  <th className="px-6 py-4 font-bold border-r border-gray-200 min-w-[300px]">Purchased Items</th>
+                  <th className="px-6 py-4 font-bold text-right min-w-[150px]">Total Amount</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {orders.map((order, index) => (
+                  <tr 
+                    key={order.id} 
+                    className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-blue-50/60 transition-colors duration-150`}
+                  >
+                    <td className="px-6 py-5 text-gray-800 font-mono font-medium border-r border-gray-200 align-top">
+                      {order.id}
+                    </td>
+                    <td className="px-6 py-5 text-gray-600 font-medium whitespace-nowrap border-r border-gray-200 align-top">
+                      {formatDate(order.createdAt)}
+                    </td>
+                    <td className="px-6 py-5 border-r border-gray-200">
+                      <ul className="space-y-2.5">
+                        {order.items.map((item, idx) => (
+                          <li key={`${order.id}-${item.productId}-${idx}`} className="flex justify-between items-center bg-white p-2 border border-gray-100 rounded shadow-sm hover:border-gray-300 transition-colors">
+                            <div className="flex items-center">
+                              <span className="bg-blue-100/60 text-blue-800 text-[10px] font-bold px-2 py-1 rounded mr-3 border border-blue-200/50">
+                                {item.quantity}x
+                              </span>
+                              <span className="font-semibold text-gray-800 text-sm truncate max-w-[150px]" title={item.name}>
+                                {item.name}
+                              </span>
+                            </div>
+                            <span className="text-gray-500 text-sm font-medium ml-4">
+                              ${Number(item.price).toFixed(2)}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td className="px-6 py-5 text-right font-bold text-lg text-green-600 align-top">
+                      ${Number(order.totalAmount).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

@@ -175,37 +175,45 @@ export default function ProductManagement() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="min-w-full text-left border-collapse border border-gray-200 shadow-sm rounded-lg">
               <thead>
-                <tr className="bg-gray-50 text-gray-600 text-sm border-b uppercase tracking-wider">
-                  <th className="p-4 font-semibold">Name</th>
-                  <th className="p-4 font-semibold">Category</th>
-                  <th className="p-4 font-semibold">Price</th>
-                  <th className="p-4 font-semibold">Stock</th>
-                  <th className="p-4 font-semibold text-right">Action</th>
+                <tr className="bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 text-sm border-b border-gray-200 uppercase tracking-wider">
+                  <th className="px-6 py-4 font-bold border-r border-gray-200">Name</th>
+                  <th className="px-6 py-4 font-bold border-r border-gray-200">Category</th>
+                  <th className="px-6 py-4 font-bold border-r border-gray-200">Price</th>
+                  <th className="px-6 py-4 font-bold border-r border-gray-200">Stock</th>
+                  <th className="px-6 py-4 font-bold text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
-                {products.map((product) => (
-                  <tr key={product.id} className="hover:bg-blue-50/30 transition-colors">
-                    <td className="p-4 text-gray-800 font-medium">{product.name}</td>
-                    <td className="p-4">
-                      <span className="bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded-full font-medium tracking-wide">
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {products.map((product, index) => (
+                  <tr 
+                    key={product.id} 
+                    className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-blue-50/60 transition-colors duration-150`}
+                  >
+                    <td className="px-6 py-4 text-gray-800 font-medium whitespace-nowrap border-r border-gray-200">{product.name}</td>
+                    <td className="px-6 py-4 border-r border-gray-200 whitespace-nowrap">
+                      <span className="bg-blue-100/50 text-blue-800 text-xs px-3 py-1.5 rounded-md font-bold tracking-wide border border-blue-200/50">
                         {product.category}
                       </span>
                     </td>
-                    <td className="p-4 text-gray-600 font-medium">${Number(product.price).toFixed(2)}</td>
-                    <td className="p-4">
+                    <td className="px-6 py-4 text-gray-600 font-semibold border-r border-gray-200">${Number(product.price).toFixed(2)}</td>
+                    <td className="px-6 py-4 border-r border-gray-200">
                       {product.stock > 0 ? (
-                        <span className="text-gray-600">{product.stock}</span>
+                        <span className="text-gray-700 font-medium">{product.stock}</span>
                       ) : (
-                        <span className="text-red-500 font-medium bg-red-50 px-2 py-1 rounded-md text-xs">Out of stock</span>
+                        <span className="text-red-600 font-bold bg-red-50 border border-red-200 px-3 py-1.5 rounded-md text-xs whitespace-nowrap flex items-center gap-1 w-max">
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                          Out of stock
+                        </span>
                       )}
                     </td>
-                    <td className="p-4 text-right">
+                    <td className="px-6 py-4 text-right">
                       <button
                         onClick={() => handleDeleteProduct(product.id)}
-                        className="text-red-600 hover:text-red-800 hover:bg-red-50 font-medium transition-colors px-3 py-1.5 rounded-md text-sm cursor-pointer border border-transparent hover:border-red-200"
+                        className="text-red-600 hover:text-red-800 hover:bg-red-50 font-bold transition-all px-4 py-2 rounded-lg text-sm cursor-pointer shadow-sm border border-gray-200 hover:border-red-200 bg-white"
                       >
                         Delete
                       </button>

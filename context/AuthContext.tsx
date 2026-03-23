@@ -4,6 +4,9 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useRouter, usePathname } from 'next/navigation';
+import DashboardLayout from '@/components/DashboardLayout';
+
+const publicRoutes = ['/', '/login', '/signup', '/register', '/forgot-password'];
 
 interface AuthContextType {
   user: User | null;
@@ -36,9 +39,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // Protect routes and handle redirects
   useEffect(() => {
     if (!loading) {
-      // Define routes that do not require authentication
-      const publicRoutes = ['/', '/login', '/signup', '/register', '/forgot-password'];
-      
       const isPublicRoute = publicRoutes.includes(pathname);
 
       // If there's no user and user tries to access a protected route (not a public route)
@@ -65,7 +65,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
       ) : (
-        children
+        user && !publicRoutes.includes(pathname) ? (
+          <DashboardLayout>{children}</DashboardLayout>
+        ) : (
+          children
+        )
       )}
     </AuthContext.Provider>
   );
