@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Product } from "@/types/product";
 import { OrderItem } from "@/types/order";
+import { generateInvoicePDF } from "@/lib/pdf";
 
 export default function BillingPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -11,6 +12,7 @@ export default function BillingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [lastOrder, setLastOrder] = useState<{ id: string, items: OrderItem[], totalAmount: number } | null>(null);
 
   useEffect(() => {
     fetchProducts();
@@ -125,12 +127,22 @@ export default function BillingPage() {
         throw new Error(errorData.error || "Failed to place order");
       }
 
+      // Extract success data (which strictly contains identical orderId)
+      const data = await res.json();
+
+      // Hook state context mapping for invoice generators prior to clearing visual arrays natively
+      setLastOrder({
+        id: data.id,
+        items: [...cart],
+        totalAmount: calculateTotal()
+      });
+
       // Success logic
       setCart([]);
       setSuccessMsg("Order successfully generated!");
       
-      // Auto-hide success message after 3 seconds
-      setTimeout(() => setSuccessMsg(""), 3000);
+      // Auto-hide success message after 10 seconds to allow time for downloading pdf
+      setTimeout(() => setSuccessMsg(""), 10000);
       
       // To ensure product stock is correctly updated visually, we should refetch products
       fetchProducts();
@@ -258,8 +270,19 @@ export default function BillingPage() {
               {/* Total Calculation Area */}
               <div className="p-5 bg-gray-50 border-t border-gray-200 rounded-b-xl">
                 {successMsg && (
-                  <div className="mb-4 bg-green-50 text-green-700 p-3 rounded-lg border border-green-200 text-sm font-medium text-center">
-                    {successMsg}
+                  <div className="mb-4 bg-green-50 text-green-700 p-4 rounded-lg border border-green-200 text-sm flex flex-col items-center gap-3">
+                    <span className="font-semibold text-center">{successMsg}</span>
+                    {lastOrder && (
+                      <button 
+                        onClick={() => generateInvoicePDF(lastOrder.id, lastOrder.items, lastOrder.totalAmount)}
+                        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm shadow-sm transition-colors border border-transparent hover:border-green-500"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download Invoice (PDF)
+                      </button>
+                    )}
                   </div>
                 )}
                 {errorMsg && (
