@@ -7,13 +7,13 @@ import { getFirestore } from "firebase/firestore";
 // Avoid exposing secrets here if you commit to public repos. 
 // However, Firebase client configs are safe to expose normally.
 const firebaseConfig = {
-    apiKey: "AIzaSyAZLS8UbkKuPeegDwuZh5SEoh2CKaYomtk",
-    authDomain: "disney-store-c4b83.firebaseapp.com",
-    projectId: "disney-store-c4b83",
-    storageBucket: "disney-store-c4b83.firebasestorage.app",
-    messagingSenderId: "651833292812",
-    appId: "1:651833292812:web:e803ff6c6416792be49629",
-    measurementId: "G-T8YJJW5M8Z"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+  measurementId: "YOUR_MEASUREMENT_ID"
 };
 
 // Initialize Firebase safely for Next.js SSR
