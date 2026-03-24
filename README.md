@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Disney_wordmark.svg/1000px-Disney_wordmark.svg.png" width="300" alt="Disney Logo" />
   <h1>🏰 Disney Store Management System</h1>
   <p>A full-stack, enterprise-grade Point of Sale (POS) and retail management platform built specially for Disney Store operations.</p>
 </div>
@@ -42,24 +41,10 @@ The **Disney Store Management System** is a scalable, modern dashboard designed 
 
 ## 🚀 Live Demo
 
-- **Live URL**: [Insert your Vercel Deployment Link Here]
-- **Repository**: [Insert your GitHub Repository Link Here]
+- **Live URL**: https://disney-store.vercel.app/
 
 ---
 
-## 📸 Screenshots
-
-| 📊 Analytics Dashboard | 💳 Point of Sale (Billing) |
-|:---:|:---:|
-| ![Dashboard UI](screenshots/dashboard.png) <br> *A responsive analytics engine utilizing interactive Recharts.* | ![Billing Page](screenshots/billing.png) <br> *Automated POS cart with native stock tracking.* |
-
-| 📦 Product Database | 🧾 Order Tracking |
-|:---:|:---:|
-| ![Product Table](screenshots/products.png) <br> *Administrators managing active warehouse constraints.* | ![Orders Map](screenshots/orders.png) <br> *Extensive historical data and PDF generation.* |
-
-*(Note: Create a `screenshots` folder in your root directory to map your exact layout images!)*
-
----
 
 ## 💻 Setup Instructions
 
